@@ -13,7 +13,9 @@ export default function TeamPage() {
   const [pullingId, setPullingId] = useState<number | null>(null); 
   const [selectedId, setSelectedId] = useState<number | null>(null); 
   
+  const [introStep, setIntroStep] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
+  
   const [isAlert, setIsAlert] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
 
@@ -23,16 +25,24 @@ export default function TeamPage() {
 
   useEffect(() => {
     refreshData();
-    // Extended to 5.5 seconds to let the entire cinematic sequence breathe
-    const timer = setTimeout(() => setShowIntro(false), 5500);
-    return () => clearTimeout(timer);
+    
+    const t1 = setTimeout(() => setIntroStep(1), 600);    
+    const t2 = setTimeout(() => setIntroStep(2), 2200);   
+    const t3 = setTimeout(() => setIntroStep(3), 4000);   
+    const t4 = setTimeout(() => setIntroStep(4), 5200);   
+    const t5 = setTimeout(() => setIntroStep(5), 7000);   
+    const t6 = setTimeout(() => setShowIntro(false), 7600); 
+
+    return () => {
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      clearTimeout(t4); clearTimeout(t5); clearTimeout(t6);
+    };
   }, []);
 
   const selectedMember = members.find((m) => m.id === selectedId);
 
   const handleCardClick = (id: number) => {
     setPullingId(id);
-    // THE FIX: Increased to 1000ms for a slow, dramatic, deliberate card draw
     setTimeout(() => setSelectedId(id), 1000); 
   };
 
@@ -47,15 +57,28 @@ export default function TeamPage() {
     <main className="min-h-screen bg-[#030303] text-white flex flex-col font-sans overflow-hidden selection:bg-[#d4ff32] selection:text-black relative">
       <nav className="w-full p-8 flex justify-between items-center z-50 border-b border-white/5 relative">
         <div className="font-black text-2xl tracking-tighter">ARMATRIX<span className="text-[#d4ff32]">.</span></div>
-        <div className="flex gap-8 items-center">
-          <button 
-            onClick={() => setShowAdmin(true)} 
-            className="font-mono text-xs text-zinc-600 hover:text-[#d4ff32] uppercase tracking-widest transition-colors"
+        
+        <div className="flex items-center">
+          {/* THE FIX: Chasing Light Border Effect */}
+          <div 
+            className="relative group rounded-full overflow-hidden p-[1px] cursor-pointer shadow-[0_0_10px_rgba(212,255,50,0.1)] hover:shadow-[0_0_20px_rgba(212,255,50,0.4)] transition-shadow duration-500"
+            onClick={() => setShowAdmin(true)}
           >
-            [ Admin Uplink ]
-          </button>
-          <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest">Personnel // Directory</div>
+            {/* The Spinning Light Beam (Hidden until hover) */}
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#d4ff32_50%,transparent_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* The Actual Button Surface */}
+            <div className="relative flex items-center justify-center bg-[#0a0a0a] group-hover:bg-[#111] transition-colors rounded-full px-8 py-2.5 w-full h-full">
+              <span className="text-[#d4ff32] font-mono text-xs uppercase tracking-[0.15em] z-10">
+                Admin Uplink
+              </span>
+            </div>
+
+            {/* Static Border (Fades out when the spinning light flares up) */}
+            <span className="absolute inset-0 rounded-full border border-[#d4ff32]/40 group-hover:border-transparent transition-colors duration-500 pointer-events-none" />
+          </div>
         </div>
+
       </nav>
 
       <div className="flex-1 relative flex items-center justify-center p-8">
@@ -65,76 +88,92 @@ export default function TeamPage() {
           {showIntro && (
             <motion.div 
               className="absolute inset-0 z-[200] flex items-center justify-center bg-[#030303]"
-              // Master fade out for the entire intro container at the very end
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 0 }}
-              transition={{ delay: 5, duration: 0.5 }} 
+              animate={{ opacity: introStep >= 5 ? 0 : 1 }}
+              transition={{ duration: 0.8 }} 
+              exit={{ opacity: 0 }}
             >
-              <div className="relative flex items-center justify-center">
-                
-                {/* MEET (Rises up late) */}
-                <motion.span
-                  className="absolute text-3xl md:text-5xl font-black text-zinc-400 uppercase right-[130%]"
-                  initial={{ opacity: 0, y: 30 }}
-                  // Appears at 3s, stays, rises up and out at 4.5s
-                  animate={{ opacity: [0, 0, 1, 1, 0], y: [30, 30, 0, 0, -20] }}
-                  transition={{ times: [0, 0.55, 0.65, 0.9, 1], duration: 5.5 }}
-                >
-                  Meet
-                </motion.span>
+              <div className="flex items-center justify-center gap-4 md:gap-6 overflow-hidden px-8">
+                 
+                 <AnimatePresence mode="popLayout">
+                   
+                   {/* MEET */}
+                   {introStep >= 4 && (
+                     <motion.span
+                       key="meet"
+                       layout
+                       initial={{ opacity: 0, y: 50 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ duration: 1.2, ease: "easeOut" }}
+                       className="text-5xl md:text-8xl font-black text-zinc-400 uppercase tracking-tighter whitespace-nowrap"
+                     >
+                       MEET
+                     </motion.span>
+                   )}
 
-                {/* THE (The Anchor Point) */}
-                <motion.span
-                  className="text-5xl md:text-7xl font-black text-[#d4ff32] uppercase z-10 drop-shadow-[0_0_20px_rgba(212,255,50,0.4)]"
-                  initial={{ x: 0, opacity: 0 }}
-                  animate={{
-                    opacity: [0, 1, 1, 1, 1, 0], // Fades in instantly
-                    x: [0, 0, -80, -80, 0, 0], // Center -> Shift Left -> Wait -> Shift Center
-                    y: [0, 0, 0, 0, 0, -20]
-                  }}
-                  transition={{ times: [0, 0.1, 0.25, 0.4, 0.55, 1], duration: 5.5, ease: "easeInOut" }}
-                >
-                  THE
-                </motion.span>
+                   {/* THE */}
+                   {introStep >= 1 && (
+                     <motion.span
+                       key="the"
+                       layout
+                       initial={{ opacity: 0, scale: 0.9 }}
+                       animate={{ opacity: 1, scale: 1 }}
+                       transition={{ duration: 1.2, ease: "easeOut" }}
+                       className="text-5xl md:text-8xl font-black uppercase tracking-tighter whitespace-nowrap drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
+                       style={{
+                         background: "linear-gradient(to bottom, #FFFFFF 0%, #D1D5DB 40%, #111827 50%, #4B5563 52%, #F3F4F6 100%)",
+                         WebkitBackgroundClip: "text",
+                         WebkitTextFillColor: "transparent"
+                       }}
+                     >
+                       THE
+                     </motion.span>
+                   )}
 
-                {/* TEAM (Slides in, fades out early) */}
-                <motion.span
-                  className="absolute text-5xl md:text-7xl font-black text-white uppercase left-1/2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{
-                    opacity: [0, 0, 1, 1, 0, 0], // Fades in next to THE, then fades out early
-                    x: [20, 20, 50, 50, 50, 50]
-                  }}
-                  transition={{ times: [0, 0.15, 0.3, 0.45, 0.55, 1], duration: 5.5, ease: "easeOut" }}
-                >
-                  TEAM
-                </motion.span>
+                   {/* TEAM */}
+                   {introStep === 2 && (
+                     <motion.span
+                       key="team"
+                       layout
+                       initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+                       animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                       exit={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+                       transition={{ duration: 1.2, ease: "easeOut" }}
+                       className="text-5xl md:text-8xl font-black uppercase tracking-tighter whitespace-nowrap text-[#d4ff32] drop-shadow-[0_0_30px_rgba(212,255,50,0.3)]"
+                     >
+                       TEAM
+                     </motion.span>
+                   )}
 
-                {/* MEMBERS (Rises up late) */}
-                <motion.span
-                  className="absolute text-3xl md:text-5xl font-black text-zinc-400 uppercase left-[130%]"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: [0, 0, 1, 1, 0], y: [30, 30, 0, 0, -20] }}
-                  transition={{ times: [0, 0.55, 0.65, 0.9, 1], duration: 5.5 }}
-                >
-                  Members
-                </motion.span>
+                   {/* MEMBERS */}
+                   {introStep >= 4 && (
+                     <motion.span
+                       key="members"
+                       layout
+                       initial={{ opacity: 0, y: 50 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ duration: 1.2, ease: "easeOut" }}
+                       className="text-5xl md:text-8xl font-black text-zinc-400 uppercase tracking-tighter whitespace-nowrap"
+                     >
+                       MEMBERS
+                     </motion.span>
+                   )}
 
+                 </AnimatePresence>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* --- 2. THE DYNAMIC LAYOUT --- */}
-        <div className={`relative w-full max-w-6xl h-[700px] flex justify-center items-center z-10 transition-opacity duration-700 ${selectedId ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className={`relative w-full max-w-6xl h-[700px] flex justify-center items-center z-10 transition-opacity duration-1000 ${selectedId ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           
           {!showIntro && isCircleLayout && (
             <motion.div 
               initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} 
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              transition={{ duration: 2, ease: "easeOut" }}
               className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
             >
-              <h1 className="text-[100px] md:text-[140px] font-black tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-b from-zinc-300 via-zinc-600 to-[#030303] drop-shadow-2xl opacity-40">
+              <h1 className="text-[100px] md:text-[140px] font-black tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#d4ff32] to-[#030303] drop-shadow-2xl opacity-20">
                 THE TEAM
               </h1>
             </motion.div>
@@ -172,7 +211,6 @@ export default function TeamPage() {
                   zIndex: isPulled || selectedId === member.id ? 50 : 10 + i
                 }}
                 transition={{ 
-                  // THE FIX: isPulled duration extended to match the slow 1-second setTimeout
                   duration: isPulled ? 1.0 : 0.85, 
                   ease: [0.16, 1, 0.3, 1], 
                   delay: (selectedId || pullingId) ? 0 : i * 0.1 
@@ -229,7 +267,6 @@ export default function TeamPage() {
                   </svg>
                 </button>
                 
-                {/* THE FIX: Real Metallic Silver Chrome Text Effect */}
                 <h1 
                   className="text-6xl font-black tracking-tighter uppercase leading-none mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
                   style={{
@@ -243,7 +280,6 @@ export default function TeamPage() {
                 
                 <h2 className="text-2xl font-mono uppercase tracking-widest text-[#d4ff32] mb-8">{selectedMember.role}</h2>
                 
-                {/* THE FIX: Bio text wrapping and strict 4-line truncation */}
                 <p className="text-zinc-400 text-lg leading-relaxed max-w-md font-light break-words whitespace-normal overflow-hidden text-ellipsis line-clamp-4">
                   {selectedMember.bio}
                 </p>

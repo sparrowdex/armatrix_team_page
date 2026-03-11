@@ -50,3 +50,5 @@ yarn-error.log*
 .vscode/
 .idea/
 Thumbs.db
+
+CHANGELOG.md

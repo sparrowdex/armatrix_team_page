@@ -8,7 +8,11 @@ app = FastAPI(title="Armatrix Team API")
 # Enable CORS so Next.js (port 3000) can talk to FastAPI (port 8000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, replace with your Vercel URL
+    allow_origins=[
+        "http://localhost:3000",
+        "https://armatrix-assignment.vercel.app", # Replace with your actual Vercel domain
+        "*" 
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -60,7 +64,7 @@ def get_members():
 @app.post("/members")
 def add_member(member: TeamMember):
     """Add a new team member"""
-    team_data.append(member.dict())
+    team_data.append(member.model_dump())
     return {"message": "Member added successfully", "member": member}
 
 @app.put("/members/{member_id}")
@@ -68,7 +72,7 @@ def update_member(member_id: int, updated_member: TeamMember):
     """Update an existing team member"""
     for i, member in enumerate(team_data):
         if member["id"] == member_id:
-            team_data[i] = updated_member.dict()
+            team_data[i] = updated_member.model_dump()
             return {"message": "Member updated", "member": updated_member}
     raise HTTPException(status_code=404, detail="Member not found")
 
