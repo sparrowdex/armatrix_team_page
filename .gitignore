@@ -1,0 +1,52 @@
+# --- Dependencies & Environments ---
+node_modules/
+frontend/node_modules/
+backend/venv/
+.env*
+*.pem
+
+# --- Next.js / Frontend ---
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.vercel
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+frontend/next-env.d.ts
+*.tsbuildinfo
+
+# --- Python / Backend ---
+**/__pycache__/
+backend/*.py[cod]
+backend/*.so
+backend/.Python
+backend/develop-eggs/
+backend/dist/
+backend/downloads/
+backend/eggs/
+backend/lib/
+backend/lib64/
+backend/parts/
+backend/sdist/
+backend/var/
+backend/wheels/
+backend/pip-wheel-metadata/
+backend/share/python-wheels/
+
+# --- Testing & Debugging ---
+frontend/coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Operating System & IDEs ---
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
