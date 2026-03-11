@@ -11,12 +11,12 @@ const bladePath = "M -20,-20 Q 300,-150 700,-20 L 1500,-20 L 1500,1500 Q 250,250
 export default function TeamCard({ 
   member, 
   isSelected, 
-  isCarouselMode = false, // NEW PROP: Tells the card if it's in the background
+  isMobile = false, // Added Mobile detector
   onClick 
 }: { 
   member: TeamMember; 
   isSelected: boolean; 
-  isCarouselMode?: boolean; 
+  isMobile?: boolean;
   onClick: () => void 
 }) {
   const open = isSelected;
@@ -26,23 +26,23 @@ export default function TeamCard({
     open: { rotate: 85, x: 460, y: 220 } 
   };
 
+  // Shrink base dimensions on mobile
+  const widthClass = isSelected 
+    ? (isMobile ? 'w-[260px]' : 'w-[360px] md:w-[400px]') 
+    : (isMobile ? 'w-[160px]' : 'w-[280px] md:w-[320px]');
+
   return (
     <motion.div
       layoutId={`card-container-${member.id}`}
       onClick={onClick}
       transition={{ layout: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 } }}
-      // THE FIX: If it's in carousel mode, make it smaller. If selected, make it huge.
-      className={`relative rounded-xl overflow-hidden cursor-pointer transform-gpu bg-[#030303] flex-shrink-0
-        ${isSelected 
-          ? 'w-[360px] md:w-[400px] aspect-[4/5] border-[#d4ff32] shadow-[0_0_50px_rgba(212,255,50,0.15)]' 
-          : isCarouselMode 
-             ? 'w-[200px] md:w-[240px] aspect-[4/5] border-zinc-800 hover:border-zinc-500' // Smaller carousel size
-             : 'w-[280px] md:w-[320px] aspect-[4/5] border-zinc-800 hover:border-[#d4ff32]/40'
-        } border transition-all duration-500`}
+      className={`relative rounded-sm overflow-hidden cursor-pointer transform-gpu bg-[#030303] flex-shrink-0 aspect-[4/5] border transition-all duration-500
+        ${widthClass}
+        ${isSelected ? 'border-[#d4ff32] shadow-[0_0_50px_rgba(212,255,50,0.15)]' : 'border-zinc-800 hover:border-[#d4ff32]/40'}
+      `}
     >
        <div className="absolute inset-0 w-full h-full">
          
-         {/* Layer 1: The Revealed Image/Info */}
          <div className="absolute inset-0 z-0">
            <motion.img 
              src={member.photo_url} 
@@ -57,7 +57,6 @@ export default function TeamCard({
            />
          </div>
 
-         {/* Layer 2: The Mechanical Shutter */}
          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full z-20 pointer-events-none">
            <defs>
              <linearGradient id={`bladeMetal-${member.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -66,22 +65,17 @@ export default function TeamCard({
                <stop offset="60%"  stopColor="#080808"/>
                <stop offset="100%" stopColor="#000000"/>
              </linearGradient>
-
              <clipPath id="tuck-clip">
                <rect x="-500" y="-1000" width="2000" height="1000" />
              </clipPath>
            </defs>
-           
            <g>
              {Array.from({ length: N }).map((_, i) => {
                const angle = (i * 360) / N;
                return (
                  <g key={i} transform={`translate(${CX}, ${CY}) rotate(${angle})`}>
                    <motion.g
-                     initial="closed"
-                     animate={open ? "open" : "closed"}
-                     variants={bladeVariants}
-                     layout={false} 
+                     initial="closed" animate={open ? "open" : "closed"} variants={bladeVariants} layout={false} 
                      transition={{ duration: 0.9, ease: [0.34, 1.2, 0.64, 1], delay: i * 0.035 }}
                      style={{ originX: 0, originY: 0 }} 
                    >
@@ -91,14 +85,9 @@ export default function TeamCard({
                  </g>
                );
              })}
-
-             {/* THE INTERLOCK DUPLICATE */}
              <g transform={`translate(${CX}, ${CY}) rotate(0)`} clipPath="url(#tuck-clip)">
                <motion.g
-                 initial="closed" 
-                 animate={open ? "open" : "closed"}
-                 variants={bladeVariants}
-                 layout={false} 
+                 initial="closed" animate={open ? "open" : "closed"} variants={bladeVariants} layout={false} 
                  transition={{ duration: 0.9, ease: [0.34, 1.2, 0.64, 1], delay: 0 }} 
                  style={{ originX: 0, originY: 0 }} 
                >
@@ -106,11 +95,9 @@ export default function TeamCard({
                  <path d={bladePath} fill="none" stroke="rgba(212,255,50,0.5)" strokeWidth="0.5" />
                </motion.g>
              </g>
-
            </g>
          </svg>
 
-         {/* Layer 3: Targeting Dot */}
          <AnimatePresence>
              {!open && (
                <motion.div 
@@ -118,13 +105,12 @@ export default function TeamCard({
                  transition={{ duration: 0.4 }}
                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none"
                >
-                 <div className="w-16 h-16 rounded-full border border-white/5 bg-black/40 backdrop-blur-md flex items-center justify-center">
-                   <div className="w-2 h-2 bg-[#d4ff32] rounded-full animate-pulse shadow-[0_0_15px_#d4ff32]" />
+                 <div className="w-10 h-10 md:w-16 md:h-16 rounded-full border border-white/5 bg-black/40 backdrop-blur-md flex items-center justify-center">
+                   <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#d4ff32] rounded-full animate-pulse shadow-[0_0_15px_#d4ff32]" />
                  </div>
                </motion.div>
              )}
          </AnimatePresence>
-
        </div>
     </motion.div>
   );
