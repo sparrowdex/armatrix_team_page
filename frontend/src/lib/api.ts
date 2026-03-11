@@ -1,6 +1,6 @@
 import { TeamMember } from "@/types/team";
 
-const API_URL = "http://localhost:8000"; 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"; 
 
 export const fetchTeamMembers = async (): Promise<TeamMember[]> => {
   const response = await fetch(`${API_URL}/members`);
