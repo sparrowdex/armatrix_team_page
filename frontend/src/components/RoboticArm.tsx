@@ -82,7 +82,7 @@ export default function ArmScene({ isAlert, isMobile }: { isAlert?: boolean; isM
   return (
     <div className="w-full h-full pointer-events-none">
       <Canvas camera={{ position: [0, 0, 8], fov: 35 }} gl={{ alpha: true, antialias: true }}>
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <Environment preset="city" />
         <Float speed={1.5} rotationIntensity={isAlert ? 0.02 : 0.15} floatIntensity={0.05}>

@@ -1,7 +1,7 @@
 # 🦾 ARMATRIX.
 **Advanced Personnel Management & Team Page Interface**
 
-![Armatrix Interface](public/images/image.png)
+![Armatrix Interface](https://armatrix-team-page-delta.vercel.app/images/image.png)
 
 <div align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
@@ -37,7 +37,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 * **Cinematic Intro Sequence:** A state-machine approach orchestrates a dramatic typographic entrance and layout transition before revealing the main directory.
 * **Smart Layout Morphing:** The interface automatically switches between a fanned "deck" layout and a 360-degree "Iris Array" depending on the size of the team roster, utilizing Framer Motion's `layoutId` for seamless morphing.
 
-![Robotic Arm Interface](public/images/image-1.png)
+![Robotic Arm Interface](https://armatrix-team-page-delta.vercel.app/images/image-1.png)
 
 ### 🐍 The 3D Engine (React Three Fiber)
 * **Procedural Slithering Probe:** A mathematically calculated, endless 3D ring track that spans the exact width of the user's screen.
@@ -48,7 +48,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 * **Database Management:** A secure, in-theme Admin Panel allows for real-time creation, deletion, and modification of personnel records.
 * **Live Synchronization:** Changes dispatched via the Admin Uplink hit the Python/FastAPI backend and instantly update the 3D-integrated frontend.
 
-![Admin Uplink](public/images/image-2.png)
+![Admin Uplink](https://armatrix-team-page-delta.vercel.app/images/image-2.png)
 
 ---
 

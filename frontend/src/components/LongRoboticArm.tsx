@@ -128,7 +128,7 @@ function ResponsiveArm({ isMobile }: { isMobile: boolean }) {
 
   const rotZ = Math.PI / 2 + (totalBend / 2);
   const startX = -spanWidth / 2;
-  const startY = -viewport.height / 2 - (isMobile ? 0.5 : 1.0);
+  const startY = -viewport.height / 2 - (isMobile ? -0.5 : 1.0);
 
   return (
     <group position={[startX, startY, -2]} rotation={[0, 0, rotZ]}>
