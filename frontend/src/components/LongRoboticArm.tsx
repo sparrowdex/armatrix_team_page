@@ -8,11 +8,10 @@ import * as THREE from "three";
 // Navigating to other cards won't replay it!
 const APP_START_TIME = Date.now();
 
-function LongProbe() {
+function LongProbe({ isMobile }: { isMobile: boolean }) {
   const rootGroup = useRef<THREE.Group>(null);
   const spinGroup = useRef<THREE.Group>(null);
   const { viewport } = useThree();
-  const isMobile = viewport.width < 5;
 
   // --- YOUR EXACT MATH ---
   const numSegments = 40; 
@@ -33,7 +32,7 @@ function LongProbe() {
   const pivotX = -(segLen / 2) / Math.tan(theta / 2);
   const pivotY = -segLen / 2;
 
-  useFrame((state) => {
+  useFrame(() => {
     if (!rootGroup.current || !spinGroup.current) return;
     const t = (Date.now() - APP_START_TIME) / 1000;
 
@@ -120,9 +119,8 @@ function LongProbe() {
   );
 }
 
-function ResponsiveArm() {
+function ResponsiveArm({ isMobile }: { isMobile: boolean }) {
   const { viewport } = useThree();
-  const isMobile = viewport.width < 5;
 
   // YOUR EXACT POSITIONING WRAPPER
   const spanWidth = viewport.width * (isMobile ? 1.05 : 0.95);
@@ -134,19 +132,19 @@ function ResponsiveArm() {
 
   return (
     <group position={[startX, startY, -2]} rotation={[0, 0, rotZ]}>
-      <LongProbe />
+      <LongProbe isMobile={isMobile} />
     </group>
   );
 }
 
-export default function LongRoboticArm() {
+export default function LongRoboticArm({ isMobile }: { isMobile: boolean }) {
   return (
     <div className="w-full h-full pointer-events-none">
       <Canvas camera={{ position: [0, 0, 15], fov: 45 }} gl={{ alpha: true, antialias: true }}>
         <ambientLight intensity={0.2} />
         <pointLight position={[0, 5, 5]} intensity={0.5} />
         <Environment preset="city" />
-        <ResponsiveArm />
+        <ResponsiveArm isMobile={isMobile} />
       </Canvas>
     </div>
   );

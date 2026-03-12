@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, PanInfo } from "framer-motion";
 import { TeamMember } from "@/types/team";
 import { fetchTeamMembers } from "@/lib/api";
 import TeamCard from "@/components/TeamCard";
@@ -135,7 +135,7 @@ export default function TeamPage() {
     else setActiveIndex(index);
   };
 
-  const handleDragEnd = (e: any, { offset }: any) => {
+  const handleDragEnd = (e: MouseEvent | TouchEvent, { offset }: PanInfo) => {
     if (offset.x < -50) setActiveIndex(prev => Math.min(members.length - 1, prev + 1)); 
     else if (offset.x > 50) setActiveIndex(prev => Math.max(0, prev - 1)); 
   };

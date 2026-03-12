@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { addTeamMember, deleteTeamMember, updateTeamMember } from "@/lib/api";
 import { TeamMember } from "@/types/team";
 
