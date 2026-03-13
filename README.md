@@ -35,7 +35,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 ### 💎 The Interaction Layer
 * **Mechanical Shutter Cards:** Each team member is housed in a custom-built card featuring a mechanical iris reveal effect, meticulously implemented using SVG paths and Framer Motion keyframes.
 * **Cinematic Intro Sequence:** A state-machine approach orchestrates a dramatic typographic entrance and layout transition before revealing the main directory.
-* **Smart Layout Morphing:** The interface automatically switches between a fanned "deck" layout and a 360-degree "Iris Array" depending on the size of the team roster, utilizing Framer Motion's `layoutId` for seamless morphing.
+* **Kinetic Interface Transitions:** Utilizing Framer Motion’s layoutId, personnel cards seamlessly morph from a fanned dynamic carousel into the expanded "Decryption View." This ensures fluid visual continuity as the interface state shifts, all while the 3D robotic arm maintains its persistent, slithering orbit in the background to create a unified, multi-depth cinematic experience.
 
 ![Robotic Arm Interface](https://armatrix-team-page-delta.vercel.app/images/image-1.png)
 
