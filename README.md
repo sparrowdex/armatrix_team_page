@@ -56,7 +56,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 
 | Architecture | Technologies Used |
 | :--- | :--- |
-| **Frontend Framework** | Next.js 15, React 19, Tailwind CSS |
+| **Frontend Framework** | Next.js 16, React 19, Tailwind CSS |
 | **Animation & Physics** | Framer Motion |
 | **3D Graphics** | Three.js, React Three Fiber, `@react-three/drei` |
 | **Backend API** | Python 3.12, FastAPI |
