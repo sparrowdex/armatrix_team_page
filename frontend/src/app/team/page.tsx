@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, PanInfo } from "framer-motion";
 import { TeamMember } from "@/types/team";
 import { fetchTeamMembers } from "@/lib/api";
@@ -7,7 +7,9 @@ import TeamCard from "@/components/TeamCard";
 import ArmScene from "@/components/RoboticArm"; 
 import LongRoboticArm from "@/components/LongRoboticArm"; 
 import AdminPanel from "@/components/AdminPanel";
+import SearchTerminal from "@/components/SearchTerminal"; // Keep this import
 
+// --- KEEP DECRYPTION OVERLAY EXACTLY HERE (Top Level) ---
 function DecryptionOverlay({ 
   selectedMember, 
   isMobile, 
@@ -65,7 +67,6 @@ function DecryptionOverlay({
                 <path d="M0,6 C10,-4 30,16 40,6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 3" />
               </svg>
             </button>
-            
             <h1 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none mb-2 md:mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] flex flex-wrap justify-center md:justify-start gap-x-3 md:gap-x-5">
               {selectedMember.name.split(' ').map((word, idx) => (
                 <span 
@@ -78,7 +79,6 @@ function DecryptionOverlay({
               ))}
             </h1>
             <h2 className="text-xl md:text-2xl font-mono uppercase tracking-widest text-[#d4ff32] mb-6 md:mb-8">{selectedMember.role}</h2>
-            
             <p className="text-zinc-400 text-sm md:text-lg leading-relaxed max-w-md font-light break-words whitespace-normal pb-12 md:pb-0">
               {selectedMember.bio}
             </p>
@@ -93,10 +93,10 @@ export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [activeIndex, setActiveIndex] = useState(0); 
   const [selectedId, setSelectedId] = useState<number | null>(null); 
+  const [searchQuery, setSearchQuery] = useState(""); // Added Search State
   
   const [showAdmin, setShowAdmin] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const refreshData = () => {
@@ -108,20 +108,31 @@ export default function TeamPage() {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     const loadTimer = setTimeout(() => setIsInitialLoad(false), 3000);
-
     return () => {
       window.removeEventListener('resize', checkMobile);
       clearTimeout(loadTimer);
     };
   }, []);
 
+  // Filter logic added back properly
+  const filteredMembers = useMemo(() => {
+    return members.filter(m => 
+      m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.role.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [members, searchQuery]);
+
+  // Reset index when searching
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [searchQuery]);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (selectedId !== null || members.length === 0) return;
+    if (selectedId !== null || filteredMembers.length === 0) return;
     if (e.key === "ArrowLeft") setActiveIndex(prev => Math.max(0, prev - 1));
-    else if (e.key === "ArrowRight") setActiveIndex(prev => Math.min(members.length - 1, prev + 1));
-  }, [selectedId, members.length]);
+    else if (e.key === "ArrowRight") setActiveIndex(prev => Math.min(filteredMembers.length - 1, prev + 1));
+  }, [selectedId, filteredMembers.length]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -136,7 +147,7 @@ export default function TeamPage() {
   };
 
   const handleDragEnd = (e: MouseEvent | TouchEvent, { offset }: PanInfo) => {
-    if (offset.x < -50) setActiveIndex(prev => Math.min(members.length - 1, prev + 1)); 
+    if (offset.x < -50) setActiveIndex(prev => Math.min(filteredMembers.length - 1, prev + 1)); 
     else if (offset.x > 50) setActiveIndex(prev => Math.max(0, prev - 1)); 
   };
 
@@ -155,9 +166,13 @@ export default function TeamPage() {
         </div>
       </nav>
 
+      {/* --- ADD SEARCH TERMINAL HERE --- */}
+      {!selectedId && (
+        <SearchTerminal onSearch={setSearchQuery} />
+      )}
+
       <div className="flex-1 relative flex items-center justify-center p-4 md:p-8 overflow-hidden">
         
-        {/* --- 1. THE FADED BACKGROUND TEXT (PERFECTED GRADIENT) --- */}
         {!selectedId && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 30 }} 
@@ -165,7 +180,6 @@ export default function TeamPage() {
             transition={{ duration: 1.5, ease: "easeOut" }} 
             className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
           >
-            {/* THE FIX: Vertical top-to-bottom gradient so the whole word shines! */}
             <h1 
               className="text-[120px] md:text-[260px] font-black tracking-tighter uppercase drop-shadow-2xl opacity-30" 
               style={{ background: "linear-gradient(to bottom, #FFFFFF 0%, #A3A3A3 40%, #111827 75%, transparent 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", color: "transparent" }}
@@ -175,10 +189,8 @@ export default function TeamPage() {
           </motion.div>
         )}
 
-        {/* --- 2. THE MASSIVE BACKGROUND ARM (NOW SLITHERING) --- */}
         {!selectedId && (
           <motion.div 
-            // THE FIX: Just a simple opacity fade. The Canvas logic handles the slithering!
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.6 }}
             transition={{ duration: 1, delay: 1.2 }}
@@ -188,7 +200,6 @@ export default function TeamPage() {
           </motion.div>
         )}
 
-        {/* --- 3. THE DYNAMIC ARCH CAROUSEL --- */}
         <div className={`relative w-full max-w-6xl h-[500px] md:h-[600px] flex justify-center items-center z-10 transition-opacity duration-1000 ${selectedId ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <AnimatePresence>
             {!selectedId && isInitialLoad && (
@@ -198,25 +209,23 @@ export default function TeamPage() {
             )}
           </AnimatePresence>
 
-          {!selectedId && activeIndex > 0 && !isMobile && (
+          {!selectedId && activeIndex > 0 && !isMobile && filteredMembers.length > 0 && (
             <button onClick={() => setActiveIndex(prev => prev - 1)} className="absolute left-0 z-50 p-4 text-zinc-500 hover:text-[#d4ff32] transition-colors"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg></button>
           )}
 
-          {!selectedId && activeIndex < members.length - 1 && !isMobile && (
+          {!selectedId && activeIndex < filteredMembers.length - 1 && !isMobile && filteredMembers.length > 0 && (
             <button onClick={() => setActiveIndex(prev => prev + 1)} className="absolute right-0 z-50 p-4 text-zinc-500 hover:text-[#d4ff32] transition-colors"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg></button>
           )}
 
           <motion.div className="absolute inset-0 flex items-center justify-center w-full h-full" drag={isMobile && !selectedId ? "x" : false} dragConstraints={{ left: 0, right: 0 }} onDragEnd={handleDragEnd}>
-            {members.map((member, i) => {
+            {filteredMembers.map((member, i) => {
               const offset = i - activeIndex;
               const isVisible = Math.abs(offset) <= 1;
-
               const xPos = offset * (isMobile ? 120 : 340);
               const yPos = Math.abs(offset) * (isMobile ? 20 : 40);
               const scale = offset === 0 ? 1 : (isMobile ? 0.7 : 0.85);
               const rotate = offset * (isMobile ? 8 : 5);
               const zIndex = 50 - Math.abs(offset);
-
               const entranceDelay = isInitialLoad ? 1.2 + (i * 0.1) : 0;
 
               return (
@@ -228,8 +237,11 @@ export default function TeamPage() {
                   transition={{ type: "spring", stiffness: 100, damping: 20, delay: entranceDelay }}
                   style={{ pointerEvents: isVisible ? 'auto' : 'none' }}
                 >
-                  <motion.div animate={{ y: offset === 0 ? [0, -10, 0] : 0 }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                    <TeamCard member={member} isSelected={false} isMobile={isMobile} onClick={() => handleCardClick(i, member.id)} />
+                  <motion.div 
+                    animate={{ y: offset === 0 ? [0, -10, 0] : 0 }} 
+                    transition={offset === 0 ? { duration: 4, repeat: Infinity, ease: "easeInOut" } : { type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <TeamCard member={member} isSelected={false} isMobile={isMobile} isCenter={offset === 0} onClick={() => handleCardClick(i, member.id)} />
                   </motion.div>
                 </motion.div>
               )
