@@ -12,11 +12,13 @@ export default function TeamCard({
   member, 
   isSelected, 
   isMobile = false, // Added Mobile detector
+  isCenter = false,
   onClick 
 }: { 
   member: TeamMember; 
   isSelected: boolean; 
   isMobile?: boolean;
+  isCenter?: boolean;
   onClick: () => void 
 }) {
   const open = isSelected;
@@ -38,7 +40,7 @@ export default function TeamCard({
       transition={{ layout: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 } }}
       className={`relative rounded-sm overflow-hidden cursor-pointer transform-gpu bg-[#030303] flex-shrink-0 aspect-[4/5] border transition-all duration-500
         ${widthClass}
-        ${isSelected ? 'border-[#d4ff32] shadow-[0_0_50px_rgba(212,255,50,0.15)]' : 'border-zinc-800 hover:border-[#d4ff32]/40'}
+        ${isSelected ? 'border-[#d4ff32] shadow-[0_0_50px_rgba(212,255,50,0.15)]' : `border-zinc-800 ${isCenter ? 'hover:border-[#d4ff32]/40' : ''}`}
       `}
     >
        <div className="absolute inset-0 w-full h-full">
