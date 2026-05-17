@@ -10,8 +10,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://armatrix-assignment.vercel.app", # Replace with your actual Vercel domain
-        "*" 
+        "https://armatrix-team-page-delta.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
