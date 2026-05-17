@@ -142,8 +142,9 @@ export default function TeamPage() {
   const selectedMember = members.find((m) => m.id === selectedId);
 
   const handleCardClick = (index: number, id: number) => {
-    if (index === activeIndex) setSelectedId(id);
-    else setActiveIndex(index);
+    if (index === activeIndex) {
+      setSelectedId(id);
+    } else setActiveIndex(index);
   };
 
   const handleDragEnd = (e: MouseEvent | TouchEvent, { offset }: PanInfo) => {
@@ -251,7 +252,7 @@ export default function TeamPage() {
 
         <AnimatePresence>
           {selectedMember && (
-            <DecryptionOverlay selectedMember={selectedMember} isMobile={isMobile} handleClose={() => setSelectedId(null)} />
+            <DecryptionOverlay key="decryption-overlay" selectedMember={selectedMember} isMobile={isMobile} handleClose={() => setSelectedId(null)} />
           )}
         </AnimatePresence>
       </div>

@@ -64,7 +64,6 @@ export default function AdminPanel({
        <div className="absolute inset-0 z-0">
          <div className="absolute inset-0 bg-[#000]" />
          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(212,255,50,0.1),transparent_40%),radial-gradient(ellipse_at_bottom_right,rgba(0,17,0,0.3),transparent_50%)]" />
-         <div className="absolute inset-0 opacity-[0.02] bg-[url('/noise.png')] bg-repeat" />
        </div>
 
        <div className="absolute inset-0 z-10 flex flex-col md:flex-row w-full h-full">

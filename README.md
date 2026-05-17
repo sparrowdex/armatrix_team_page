@@ -19,8 +19,8 @@
 ## 🔗 Live Deployments
 
 * 🌐 **Frontend (Vercel):** [armatrix-team-page.vercel.app](https://armatrix-team-page-delta.vercel.app)
-* ⚙️ **Backend API (Railway):** [armatrixteampage.up.railway.app](https://armatrixteampage-production.up.railway.app)
-* 📖 **API Docs:** [FastAPI Swagger UI](https://armatrixteampage-production.up.railway.app/docs)
+* ⚙️ **Backend API (Hugging Face Spaces):** [Hugging Face Space](https://huggingface.co/spaces/sparrowdex/armatrix-backend) *(Update with your URL)*
+* 📖 **API Docs:** [FastAPI Swagger UI](https://sparrowdex-armatrix-backend.hf.space/docs) *(Update with your URL)*
 
 ---
 
@@ -46,7 +46,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 
 ### 🛡️ The Admin Uplink (Full CRUD)
 * **Database Management:** A secure, in-theme Admin Panel allows for real-time creation, deletion, and modification of personnel records.
-* **Live Synchronization:** Changes dispatched via the Admin Uplink hit the Python/FastAPI backend and instantly update the 3D-integrated frontend.
+* **Live Synchronization:** Changes dispatched via the Admin Uplink hit the Python/FastAPI backend (Dockerized on Hugging Face Spaces) and instantly update the 3D-integrated frontend.
 
 ![Admin Uplink](https://armatrix-team-page-delta.vercel.app/images/image-2.png)
 
@@ -61,7 +61,7 @@ For detailed setup instructions, please refer to the [Setup Guide](setup_guide.m
 | **3D Graphics** | Three.js, React Three Fiber, `@react-three/drei` |
 | **Backend API** | Python 3.12, FastAPI |
 | **Data Validation** | Pydantic |
-| **Deployment & Hosting** | Vercel (Client), Railway (Server) |
+| **Deployment & Hosting** | Vercel (Client), Hugging Face Spaces (Server) |
 
 ---
 
