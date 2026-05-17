@@ -19,8 +19,8 @@
 ## 🔗 Live Deployments
 
 * 🌐 **Frontend (Vercel):** [armatrix-team-page.vercel.app](https://armatrix-team-page-delta.vercel.app)
-* ⚙️ **Backend API (Hugging Face Spaces):** [Hugging Face Space](https://huggingface.co/spaces/sparrowdex/armatrix-backend) *(Update with your URL)*
-* 📖 **API Docs:** [FastAPI Swagger UI](https://sparrowdex-armatrix-backend.hf.space/docs) *(Update with your URL)*
+* ⚙️ **Backend API (Hugging Face Spaces):** [Hugging Face Space](https://huggingface.co/spaces/sparrowdex/armatrix-backend) *
+* 📖 **API Docs:** [FastAPI Swagger UI](https://sparrowdex-armatrix-backend.hf.space/docs) 
 
 ---
 
